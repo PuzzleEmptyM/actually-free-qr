@@ -93,7 +93,9 @@ export default function Home() {
             bgColor={bg}
             level="M"
             includeMargin={false}
-            ref={canvasRef as any}
+            ref={(node: HTMLCanvasElement | null) => {
+              canvasRef.current = node;
+            }}
           />
         </div>
       </section>

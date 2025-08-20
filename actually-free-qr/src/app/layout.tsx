@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Actually Free QR — No watermark, no paywalls',
-  description: '100% client-side QR generator. Free forever. PNG export. No login.',
+  description: '100% client-side QR generator. Free forever. PNG export. Login optional.',
   manifest: '/manifest.json',
   themeColor: '#111827',
   viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
