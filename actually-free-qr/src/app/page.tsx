@@ -18,49 +18,27 @@ export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const safeValue = useMemo(() => value.trim() || ' ', [value]);
 
-  const notify = (s: string) => {
-    setMsg(s);
-    setTimeout(() => setMsg(null), 2500);
-  };
-
+  const notify = (s: string) => { setMsg(s); setTimeout(() => setMsg(null), 2500); };
   const downloadPng = () => {
     const canvas = canvasRef.current;
-    if (!canvas || !safeValue.trim()) {
-      notify('Enter text or a URL first.');
-      return;
-    }
+    if (!canvas || !safeValue.trim()) { notify('Enter text or a URL first.'); return; }
     const url = canvas.toDataURL('image/png');
     const a = document.createElement('a');
-    a.href = url;
-    a.download = `qr-${Date.now()}.png`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    a.href = url; a.download = `qr-${Date.now()}.png`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
     notify('Downloaded QR as PNG.');
   };
 
   return (
-    <main className="container">
+    <main>
       <Title subtitle="100% client-side. No watermark. No login. Web-app/PWA." />
-
-      <Controls
-        value={value} setValue={setValue}
-        fg={fg} setFg={setFg}
-        bg={bg} setBg={setBg}
-        size={size} setSize={setSize}
-      />
-
+      <Controls value={value} setValue={setValue} fg={fg} setFg={setFg} bg={bg} setBg={setBg} size={size} setSize={setSize} />
       <QRPreview value={safeValue} size={size} fg={fg} bg={bg} canvasRef={canvasRef} />
-
       <DownloadButton disabled={!safeValue.trim()} onClick={downloadPng} />
-
-      <p style={{ fontSize: 12, color: 'var(--muted)', marginTop: 8 }}>
+      <p className="mx-auto mt-3 max-w-3xl px-4 text-xs text-zinc-500 dark:text-zinc-400">
         Tracked links & analytics coming soon (edge redirect + tiny DB). Still 100% free to use.
       </p>
-
       <Toast message={msg} />
-
-      {/* Ad slot placeholder: mount AdSense component later */}
       <AdBanner />
     </main>
   );

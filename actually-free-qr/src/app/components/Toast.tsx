@@ -1,8 +1,5 @@
 'use client';
-
-type Props = { message: string | null };
-
-export default function Toast({ message }: Props) {
+export default function Toast({ message }: { message: string | null }) {
   if (!message) return null;
-  return <p style={{ fontSize: 12, color: '#065f46', marginTop: 6 }}>{message}</p>;
+  return <p className="mx-auto mt-3 max-w-3xl px-4 text-sm text-emerald-600 dark:text-emerald-400">{message}</p>;
 }
