@@ -1,13 +1,12 @@
+import { NextRequest, NextResponse } from 'next/server';
 import { getAuth } from '@clerk/nextjs/server';
-import { NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   const { userId } = getAuth(req);
   if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const { searchParams } = new URL(req.url);
-  const id = searchParams.get('id');
+  const id = new URL(req.url).searchParams.get('id');
   if (!id) return NextResponse.json({ error: 'id is required' }, { status: 400 });
 
   const owner = await sql/*sql*/`SELECT 1 FROM qr_codes WHERE id=${id} AND user_id=${userId} LIMIT 1`;

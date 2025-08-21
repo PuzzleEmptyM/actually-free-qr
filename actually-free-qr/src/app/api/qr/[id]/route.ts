@@ -4,16 +4,15 @@ import { sql } from '@/lib/db';
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> } // 👈 Promise
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await params; // 👈 await it
+  const { id } = await params;
 
   const { userId } = getAuth(req);
   if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { rowCount } = await sql/*sql*/`
-    DELETE FROM qr_codes
-    WHERE id = ${id} AND user_id = ${userId}
+    DELETE FROM qr_codes WHERE id = ${id} AND user_id = ${userId}
   `;
   if (rowCount === 0) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 

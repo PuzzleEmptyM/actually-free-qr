@@ -1,8 +1,8 @@
+import { NextRequest, NextResponse } from 'next/server';
 import { getAuth } from '@clerk/nextjs/server';
-import { NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   const { userId } = getAuth(req);
   if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
