@@ -10,8 +10,8 @@ import AdBanner from './components/AdBanner';
 
 export default function Home() {
   const [value, setValue] = useState('https://example.com');
-  const [fg, setFg] = useState('#000000');
-  const [bg, setBg] = useState('#ffffff');
+  const [fg, setFg] = useState('#FFFFFF');
+  const [bg, setBg] = useState('#0b0b0f');
   const [size, setSize] = useState(256);
   const [msg, setMsg] = useState<string | null>(null);
 
@@ -35,7 +35,7 @@ export default function Home() {
       <Controls value={value} setValue={setValue} fg={fg} setFg={setFg} bg={bg} setBg={setBg} size={size} setSize={setSize} />
       <QRPreview value={safeValue} size={size} fg={fg} bg={bg} canvasRef={canvasRef} />
       <DownloadButton disabled={!safeValue.trim()} onClick={downloadPng} />
-      <p className="mx-auto mt-3 max-w-3xl px-4 text-xs text-zinc-500 dark:text-zinc-400">
+      <p className="mx-auto mt-3 max-w-3xl px-4 text-xs text-zinc-400">
         Tracked links & analytics coming soon (edge redirect + tiny DB). Still 100% free to use.
       </p>
       <Toast message={msg} />
