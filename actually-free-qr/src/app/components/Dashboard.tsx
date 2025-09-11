@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? (typeof window !== 'undefined' ? window.location.origin : '');
+
 type Code = {
   id: string;
   label: string | null;
@@ -150,7 +152,7 @@ export default function Dashboard() {
         ) : (
           <ul className="divide-y divide-zinc-800">
             {codes.map((c) => {
-              const shortUrl = `${window.location.origin}/r/${c.id}`;
+              const shortUrl = `${BASE_URL}/r/${c.id}`;
               const isEditing = editingId === c.id;
               const isBusy = busy === c.id;
 

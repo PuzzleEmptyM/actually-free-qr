@@ -24,6 +24,5 @@ export async function GET(
     INSERT INTO qr_scans (qr_id, country, ip, user_agent, referer)
     VALUES (${id}, ${country}, ${ip}, ${ua}, ${ref})
   `;
-
   return NextResponse.redirect(rows[0].destination_url, 302);
 }

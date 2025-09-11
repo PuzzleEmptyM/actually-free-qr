@@ -17,6 +17,7 @@ export default function Home() {
   const [size, setSize] = useState(256);
   const [msg, setMsg] = useState<string | null>(null);
   const [lastLink, setLastLink] = useState<string | null>(null);
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? (typeof window !== 'undefined' ? window.location.origin : '');
 
   async function createTracked(destination: string, fg: string, bg: string, size: number): Promise<string | null> {
     try {
@@ -27,7 +28,7 @@ export default function Home() {
       });
       if (!res.ok) return null;
       const { id } = await res.json();
-      return `${window.location.origin}/r/${id}`;
+      return `${BASE_URL}/r/${id}`;
     } catch {
       return null;
     }

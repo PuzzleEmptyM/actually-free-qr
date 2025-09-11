@@ -5,6 +5,22 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   experimental: { optimizeCss: true },
   eslint: { ignoreDuringBuilds: true },
+
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'actually-free-qr-w43i.vercel.app',
+          },
+        ],
+        destination: 'https://www.actuallyfreeqr.com/:path*',
+        permanent: true,
+      },
+    ]
+  },
 }
 
 export default withPWA({
