@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 
 type Code = {
@@ -82,6 +82,26 @@ export default function Dashboard() {
   const [countrySortKey, setCountrySortKey] =
     useState<'country' | 'impressions' | 'views'>('views');
   const [countrySortDir, setCountrySortDir] = useState<SortDir>('desc');
+
+  const canvasRefs = useRef(new Map<string, HTMLCanvasElement | null>());
+
+  // Download helper
+  const downloadPng = (c: Code) => {
+    const canvas = canvasRefs.current.get(c.id);
+    if (!canvas) {
+      alert('Generating image… please try again in a second.');
+      return;
+    }
+    const url = canvas.toDataURL('image/png');
+    const a = document.createElement('a');
+    const filenameBase =
+      (c.label?.trim().replace(/[^\w\-]+/g, '_') || c.id).slice(0, 40);
+    a.href = url;
+    a.download = `${filenameBase}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
 
   // load codes
   useEffect(() => {
@@ -308,6 +328,12 @@ export default function Dashboard() {
                   {isOpen ? 'Hide' : 'View'}
                 </button>
                 <button
+                  onClick={() => downloadPng(c)}
+                  className="rounded-md border border-zinc-800 bg-zinc-900 px-2 py-1 text-xs text-zinc-200 hover:bg-zinc-800"
+                >
+                  Download PNG
+                </button>
+                <button
                   onClick={() => deleteCode(c.id)}
                   disabled={busyRow}
                   className="rounded-md border border-red-900/50 bg-red-950/50 px-2 py-1 text-xs text-red-300 disabled:opacity-60"
@@ -372,6 +398,20 @@ export default function Dashboard() {
                   </div>
                 </div>
               )}
+              {/* Hidden high-res canvas for download (no layout impact) */}
+              <div className="absolute h-0 w-0 overflow-hidden">
+                <QRCodeCanvas
+                  value={shortUrl}
+                  size={Math.max(256, c.size ?? 512)}   // crisp downloads
+                  fgColor={fg}
+                  bgColor={bg}
+                  includeMargin={false}
+                  // store ref for this code id
+                  ref={(node: HTMLCanvasElement | null) => {
+                    canvasRefs.current.set(c.id, node);
+                  }}
+                />
+              </div>
             </div>
           );
         })}
@@ -500,14 +540,33 @@ export default function Dashboard() {
                             }`}
                           >{isOpen ? 'Hide' : 'View'}</button>
                           <button
+                            onClick={() => downloadPng(c)}
+                            className="rounded-md border border-zinc-800 bg-zinc-900 px-2 py-1 text-xs text-zinc-200 hover:bg-zinc-800"
+                          >
+                            Download PNG</button>
+                          <button
                             onClick={() => deleteCode(c.id)}
                             disabled={busyRow}
                             className="rounded-md border border-red-900/50 bg-red-950/50 px-2 py-1 text-xs text-red-300 disabled:opacity-60"
                           >Delete</button>
                         </div>
                       </td>
+                      {/* Hidden high-res canvas for desktop row */}
+                      <td className="sr-only">
+                        <div className="absolute h-0 w-0 overflow-hidden">
+                          <QRCodeCanvas
+                            value={shortUrl}
+                            size={Math.max(256, c.size ?? 512)}
+                            fgColor={fg}
+                            bgColor={bg}
+                            includeMargin={false}
+                            ref={(node: HTMLCanvasElement | null) => {
+                              canvasRefs.current.set(c.id, node);
+                            }}
+                          />
+                        </div>
+                      </td>
                     </tr>
-
                     {/* Inline details row */}
                     {isOpen && (
                       <tr key={`${c.id}-details`} className="bg-zinc-950/40">
